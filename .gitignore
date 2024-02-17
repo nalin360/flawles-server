@@ -1,0 +1,15 @@
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore Node.js build artifacts
+node_modules
+
+# Ignore built TypeScript declaration files
+*.d.ts
+
+# API keys and secrets
+.env
+
+# Ignore built ts files
+dist/**/*
