@@ -1,0 +1,7 @@
+# These owners will be the default owners for everything in
+# Default reviewers/codeowners for all code changes
+# review when someone opens a pull reques.
+* @nalin360
+
+# emails
+*.html nalinsahani01010@gmail.com
