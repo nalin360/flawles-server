@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Router } from 'express';
 import http from 'http';
 import bodyParser from 'body-parser';
 import compression from 'compression' ;
@@ -6,6 +6,9 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import router from './router';
+// import userRoutes from './router';
+
 
 dotenv.config();
 
@@ -19,13 +22,15 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-const server = http.createServer(app)
 
 const PORT = process.env.PORT;
 const MONGO_URL: string = process.env.DATABASE_URL || ' ';
 
 mongoose.Promise = Promise;
-mongoose.connect(MONGO_URL)
+mongoose.connect(MONGO_URL, {
+    dbName: 'flawlessTestDB',
+    tls: true 
+})
 .then( () => {
     console.log("connection succesfull");
 })
@@ -34,6 +39,13 @@ mongoose.connection.on('error',(error:Error) => {
     
 },)
 
+try {
+    app.use('/',router());
+} catch (error) {
+    console.log(error);
+    
+}
+const server = http.createServer(app)
 
 server.listen(PORT, ()=> {
 console.log(`Server running on http://localhost:${PORT}/`);
