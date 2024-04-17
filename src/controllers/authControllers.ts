@@ -1,9 +1,8 @@
+//authController.js
 import express from "express";
 import { getUserByEmail, createUser } from '../helpers/userHelper';
 import { random, authentication } from '../helpers/authHelpers';
 // import { User } from "shared/interfaces/types";
-
-
 
 export const login = async (req: express.Request, res: express.Response) => {
     try {
@@ -62,7 +61,8 @@ export const register = async (req: express.Request, res: express.Response) => {
                 password: authentication(salt, password),
             }
         });
-
+        console.log(email , username , password);
+        
         return res.status(200).json(newUser);
 
     } catch (error) {

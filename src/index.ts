@@ -22,13 +22,18 @@ app.use(compression());
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-
+try {
+    app.use('/',router());
+} catch (error) {
+    console.log(error);
+    
+}
 const PORT = process.env.PORT;
 const MONGO_URL: string = process.env.DATABASE_URL || ' ';
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGO_URL, {
-    dbName: 'flawlessTestDB',
+    // dbName: 'flawlessTestDB',
     tls: true 
 })
 .then( () => {
@@ -39,12 +44,7 @@ mongoose.connection.on('error',(error:Error) => {
     
 },)
 
-try {
-    app.use('/',router());
-} catch (error) {
-    console.log(error);
-    
-}
+
 const server = http.createServer(app)
 
 server.listen(PORT, ()=> {
