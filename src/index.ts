@@ -29,20 +29,27 @@ try {
     
 }
 const PORT = process.env.PORT;
-const MONGO_URL: string = process.env.DATABASE_URL || ' ';
+const MONGO_URL: string = process.env.LOCAL_DB_URL || ' ';
+console.log(MONGO_URL);
 
-mongoose.Promise = Promise;
+// mongoose.Promise = Promise;
 mongoose.connect(MONGO_URL, {
-    // dbName: 'flawlessTestDB',
-    tls: true 
+    // tls: true,
+    // useNewUrlParser: true,
+    // useUnifiedTopology: true,
+    // retryWrites: true,
+    // socketTimeoutMS: 1000,
+    // serverSelectionTimeoutMS: 5000
+    // retryAttempts: 5,
+    // retryDelay: 5000,
 })
-.then( () => {
-    console.log("connection succesfull");
+.then(() => {
+    console.log("Connection successful");
 })
-mongoose.connection.on('error',(error:Error) => {
-    console.log(error);
-    
-},)
+.catch((error) => {
+    console.error("Error connecting to MongoDB:", error);
+});
+
 
 
 const server = http.createServer(app)
