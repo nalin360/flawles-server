@@ -13,10 +13,12 @@ export const getBoardByBoardId = (boardId: string) => Board.findOne({ boardID: b
 // Helper function to create a new work item
 
 
-export const createBoard = async (boardId: string, initialWorkItems: { todo?: any[], do?: any[], done?: any[] } = {}) => {
+export const createBoard = async (boardId: string, boardName:string,boardDesc:string, initialWorkItems: { todo?: any[], do?: any[], done?: any[] } = {}) => {
     // Create a new board with the provided ID and initial work items
     const newBoard = new Board({
         boardID: boardId,
+        boardName: boardName,
+        boardDesc:boardDesc,
         work: {
             todo: initialWorkItems.todo || [],
             do: initialWorkItems.do || [],
@@ -52,7 +54,7 @@ export const createWorkItem = async (boardId: string, workType: string, title: s
 
 // Helper function to get all work items of a specific type
 export const getWorkItems = async (boardId: string, workType: string) => {
-    const board = await Board.findById(boardId);
+    const board = await Board.findOne({boardID:boardId});
     if (!board) throw new Error('Board not found');
 
     // Ensure the workType array is initialized
@@ -66,7 +68,7 @@ export const getWorkItems = async (boardId: string, workType: string) => {
 
 // Helper function to update a work item
 export const updateWorkItem = async (boardId: string, workType: string, itemId: string, updates: Partial<IWorkItem>) => {
-    const board = await Board.findById(boardId);
+    const board = await Board.findOne({boardID : boardId});
     if (!board) throw new Error('Board not found');
 
     // Ensure the workType array is initialized
@@ -88,7 +90,7 @@ export const updateWorkItem = async (boardId: string, workType: string, itemId: 
 
 // Helper function to delete a work item
 export const deleteWorkItem = async (boardId: string, workType: string, itemId: string) => {
-    const board = await Board.findById(boardId);
+    const board = await Board.findOne({boardID : boardId});
     if (!board) throw new Error('Board not found');
 
     // Ensure the workType array is initialized

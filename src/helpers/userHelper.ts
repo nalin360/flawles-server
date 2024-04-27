@@ -17,7 +17,7 @@ export const updateUSerByid =
     (id: string, values: Record<string, any>) => UserModel.findByIdAndUpdate(id, values);
 
 
-    export const addBoardToUser = async (userId: string, boardId: string) => {
+    export const addBoardToUser = async (userId: string, boardId: string , boardName: string , boardDesc:string) => {
         // Check if a board with the same boardID already exists
         const existingBoard = await Board.findOne({ boardID: boardId });
         if (existingBoard) {
@@ -25,7 +25,7 @@ export const updateUSerByid =
         }
     
         // Create a new board
-        const newBoard = await createBoard(boardId);
+        const newBoard = await createBoard(boardId , boardName , boardDesc);
         const userIdObjectId = new mongoose.Types.ObjectId(userId);
 
         // Associate the new board with the user
@@ -48,13 +48,29 @@ export const getUserWithBoards = async (userId: string) => {
     // Find the user by their ID and populate the 'Boards' field
     console.log(userId);
     
+    // const user = await UserModel.findById(userId)
     const user = await UserModel.findById(userId)
+    const board = await Board.find({createdBy:userId}).exec() 
     // const users = await getUser();
     if (!user) {
         throw new Error('User not found');
     }
 
-    return user;
+    return board;
 };
 
+export const getSpecificBoard = async (userId: string, boardID: string) => {
+    // Find the user by their ID
+    const user = await UserModel.findById(userId);
+    if (!user) {
+        throw new Error('User not found');
+    }
+    // Find the board by its boardID and ensure it's created by the specified user
+    const board = await Board.findOne({  boardID: boardID,createdBy:userId }).exec();
+    // console.log(board); // is null
+    if (!board && board ===  null) {
+        throw new Error('Board not found');
+    }
 
+    return board;
+};
