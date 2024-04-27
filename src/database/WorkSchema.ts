@@ -17,6 +17,8 @@
     // Define the interface for a board
     export interface IBoard extends Document {
         boardID: string;
+        boardName:string;
+        boardDesc:string;
         work: IWork;
         createdBy?: mongoose.Types.ObjectId;
     }
@@ -43,6 +45,8 @@
     // Define the schema for a board
     export const BoardSchema = new Schema({
         boardID: { type: String, required: true, unique: true },
+        boardName:{ type: String, required: true},
+        boardDesc:{ type: String, required: true},
         createdBy: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "Users"
