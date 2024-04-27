@@ -1,5 +1,6 @@
 import express from 'express';
 import { createWorkItem, getWorkItems, createBoard, updateWorkItem, deleteWorkItem } from '../helpers/workHelper';
+import { StringExpression } from 'mongoose';
 
 const router = express.Router();
 
@@ -7,12 +8,9 @@ const router = express.Router();
 
 export const createNewBoards = async (req: express.Request, res: express.Response) => {
 	try {
-		const { boardId } = req.query;
-		// const boardIdNumber = parseInt(boardId as string, 10);
-        // if (isNaN(boardIdNumber)) {
-        //     return res.status(400).json({ message: 'Invalid boardId' });
-        // }
-		const newBoard = await createBoard(boardId as string);
+		const { boardId , boardName , boardDesc} = req.query;
+		
+		const newBoard = await createBoard(boardId as string, boardName as string , boardDesc as string);
         
 		res.status(201).json(newBoard);
 	} catch (error) {
@@ -47,7 +45,7 @@ export const getCurrentWorkItems = async (req: express.Request, res: express.Res
 	try {
         // boardId id boardId_id
 		const { boardId, workType } = req.params;
-		const workItem = await getWorkItems(boardId, workType);
+		const workItem = await getWorkItems(boardId as string, workType as string);
 		res.status(200).json(workItem);
 
 	} catch (error) {
@@ -61,10 +59,10 @@ export const getCurrentWorkItems = async (req: express.Request, res: express.Res
 // Route for updating work items
 export const updateWorkItems = async (req: express.Request, res: express.Response) => {
     try {
-        const { boardId, workType, itemId } = req.params;
+        const { boardId, workType, itemId } = req.query;
         const updates = req.body;
 
-        const updatedWorkItem = await updateWorkItem(boardId, workType, itemId, updates);
+        const updatedWorkItem = await updateWorkItem(boardId as string, workType as string, itemId as string, updates);
         res.status(200).json(updatedWorkItem);
     } catch (error) {
         res.status(500).json({ message: error });
@@ -75,9 +73,9 @@ export const updateWorkItems = async (req: express.Request, res: express.Respons
 // Route for deleting work items
 export const deleteWorkItems = async (req: express.Request, res: express.Response) => {
     try {
-        const { boardId, workType, itemId } = req.params;
+        const { boardId, workType, itemId } = req.query;
 
-        await deleteWorkItem(boardId, workType, itemId);
+        await deleteWorkItem(boardId as string, workType as string , itemId as string);
         res.status(200).json({ message: 'Work item deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error });

@@ -1,5 +1,5 @@
 import express from "express";
-import { deleteUserByid, getUser, updateUSerByid, getUserByid, addBoardToUser, getUserWithBoards } from '../helpers/userHelper';
+import { deleteUserByid, getUser, updateUSerByid, getUserByid, addBoardToUser, getUserWithBoards, getSpecificBoard } from '../helpers/userHelper';
 import { rmSync } from "fs";
 import { createBoard, getBoards } from '../helpers/workHelper';
 
@@ -7,18 +7,30 @@ import { createBoard, getBoards } from '../helpers/workHelper';
 export const getUserWithAllBoards = async (req: express.Request , res: express.Response) => {
     try {
         const userId = req.query.userId as string; // Type assertion
+        // const boardID = req.query.boardID as string; // Type assertion
 
         // Check if userId is a valid string
         if (!userId) {
             return res.status(400).json({ message: 'Invalid userId' });
         }
-        const getBoardsWithUser = await getUserByid(userId)
+        const getBoardsWithUser = await getUserWithBoards(userId);
         res.status(200).json(getBoardsWithUser)
     } catch (error) {
         res.status(500).json({ error})
     }
 };
 
+export const getBoardbyID = async (req: express.Request , res: express.Response) => {
+    try {
+        const userId =  req.query.userId as string;
+        const boardID =  req.query.boardID as string;
+        
+        const board = await getSpecificBoard(userId,boardID);
+        res.status(200).json(board);
+    } catch (error) {
+        res.status(500).json({error})
+    }
+}
 export const getUserById = async (req: express.Request , res: express.Response) => {
     try {
         const userId = req.query.userId as string;
@@ -34,9 +46,9 @@ export const getUserById = async (req: express.Request , res: express.Response) 
 }
 export const createBoardToUser =  async (req: express.Request, res: express.Response) => {
     try {
-        const { userId , boardId} = req.query;
+        const { userId , boardId , boardName, boardDesc} = req.query;
         
-        const updatedUser = await addBoardToUser(`${userId}` , `${boardId}`);
+        const updatedUser = await addBoardToUser(userId as string , boardId as string, boardName as string,boardDesc as string);
         res.status(200).json(updatedUser);
     } catch (error) {
         console.error(error);
